@@ -1,5 +1,5 @@
 describe('user can create a contact', () => {
-	it('test', () => {
+	it('provides an input form', () => {
 		cy.visit('http://localhost:3001');
 		cy.get('#add-contact').click();
 		cy.get('#name').type('Thomas')
@@ -8,6 +8,13 @@ describe('user can create a contact', () => {
 		cy.get('#company').type('Craft Academy')
 		cy.get('#notes').type('Awesome coder')
 		cy.get('#twitter').type('@thomasochman')
-		//cy.contains('Add new contact');
+		cy.get('#submit').click()
+	})
+	it('displays a name of the new contact', () => {
+		cy.get('#contact-list').should('contain', 'Thomas')
+	})
+	
+	it('displays the phone number of the new contact', () => {
+		cy.get('#contact-list').should('contain', '0700 101010')
 	})
 })
