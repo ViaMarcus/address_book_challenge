@@ -1,0 +1,1 @@
+alert('app.js is connected to index.html')

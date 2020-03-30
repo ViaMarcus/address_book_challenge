@@ -1,0 +1,18 @@
+{
+  "name": "address_book_challenge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ViaMarcus/address_book_challenge.git",
+  "author": "Marcus.Sjoqvist <marcus.sjoqvist@viametrics.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^4.2.0"
+  },
+  "dependencies": {
+    "superstatic": "^6.0.4"
+  },
+  "scripts": {
+		"start": "superstatic src --port 3001",
+		"cy:open": "yarn start & cypress open"
+	}
+}
