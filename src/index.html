@@ -18,28 +18,30 @@
     <!----  top part where create/edit form comes up when creating/editing
             Should have 2 divs that rearrange when screen is small
             Should have form validation and duplicate checks-->
-    <button id="add-contact">+New</button>
-    <form id="new-contact-form">
-		<label for="name">Name</label>
-		<input id="name" name="name" type="text">
-		<label for="email">Email</label>
-		<input id="email" name="email" type="email">
-		<label for="phone">Phone</label>
-		<input id="phone" name="phone" type="text">
-		<label for="company">Company</label>
-		<input id="company" name="company" type="text">
-		<label for="notes">Notes</label>
-		<textarea id="notes" name="notes" type="text"></textarea>
-		<label for="twitter">Twitter</label>
-        <input id="twitter" name="twitter" type="text">
-        <input id="submit" type="submit" value="Save contact">
-	</form>
-
-
+            <div id="new-button-div"><button id="add-contact">&#9654; New</button></div>
+            
+    <div id="new-contact-div">
+        <form id="new-contact-form">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="text">
+            <label for="company">Company</label>
+            <input id="company" name="company" type="text">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" type="text"></textarea>
+            <input id="submit" type="submit" value="Save contact">
+        </form>
+    </div>
     <!--    end form part-->
+    <hr>
     <!----  List of contacts, each contact should at least have names, email and phone number
             luxury items: picture, any number of phone numbers, -->
+    <div id="contact-list">
 
+    </div>
 
 
 
