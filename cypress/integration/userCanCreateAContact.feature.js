@@ -1,19 +1,18 @@
 describe('user can create a contact', () => {
 	beforeEach('provides an input form', () => {
 		cy.visit('http://localhost:3001');
+		cy.wait(500);
+		cy.contains("You have not contacts")
 		cy.get('#add-contact').click();
-		cy.get('#name').type('Thomas')
-		cy.get('#email').type('thomas@craft.se')
-		cy.get('#phone').type('0700101010')
-		cy.get('#company').type('Craft Academy')
-		cy.get('#notes').type('Trekkie')
-		cy.get('#submit').click()
+		cy.get('#name').type('Slartibartfast')
+		cy.get('#email').type('fake@email.se')
+		cy.get('#phone').type('+4696969696969')
+		cy.get('#company').type('Planetary builders')
+		cy.get('#notes').type('Did Norway\'s fjords');
+		cy.get('#submit').click();
 	})
 	it('displays a name of the new contact', () => {
-		cy.get('#contact-list').should('contain', 'Thomas')
-	})
-	
-	it('displays the phone number of the new contact', () => {
-		cy.get('#contact-list').should('contain', '0700101010')
+		cy.get('#contact-list').should('contain', 'Slartibartfast')
+		cy.get('#contact-list').should('not.contain', 'You have no contacts')
 	})
 })

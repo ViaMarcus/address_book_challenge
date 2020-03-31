@@ -1,20 +1,33 @@
 body {
-    background-color: beige;
+    background-color: bisque;
 }
-.invisible {
-    display: none;
+.button-div {
+    width: 100%;
+    box-shadow: 0px 2px 2px grey;
 }
-.visible {
-    display: block;
+#new-contact-div {
+    margin-top: 1rem;
+    justify-content: space-evenly;
 }
-#new-button-div {
+#contact-table, td, th{
+    border: 4px brown double;
+    border-collapse: collapse;
+}
+#contact-table {
     width: 100%;
 }
-#add-contact {
+
+#add-contact, #edit-contact{
     width: 100%;
     text-align: left;
     background: none;
     height: 100%;
     border: none;
     outline: 0;
+}
+#edit-contact {
+    width: 100%;
+}
+.formdiv {
+    display: inline;
 }

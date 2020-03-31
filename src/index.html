@@ -18,34 +18,51 @@
     <!----  top part where create/edit form comes up when creating/editing
             Should have 2 divs that rearrange when screen is small
             Should have form validation and duplicate checks-->
-            <div id="new-button-div"><button id="add-contact">&#9654; New</button></div>
-            
-    <div id="new-contact-div">
-        <form id="new-contact-form">
-            <label for="name">Name</label>
-            <input id="name" name="name" type="text">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email">
-            <label for="phone">Phone</label>
-            <input id="phone" name="phone" type="text">
-            <label for="company">Company</label>
-            <input id="company" name="company" type="text">
-            <label for="notes">Notes</label>
-            <textarea id="notes" name="notes" type="text"></textarea>
-            <input id="submit" type="submit" value="Save contact">
-        </form>
-    </div>
+    <div id="new-button-div" class="button-div"><button id="add-contact" class="wide-button">&#9654; New contact</button>
+        <div id="new-contact-div">
+            <form id="new-contact-form">
+                <div id="form-left" class="formdiv">
+                    <label for="name">Name</label>
+                    <input id="name" name="name" type="text">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email">
+                    <label for="phone">Phone</label>
+                    <input id="phone" name="phone" type="text">
+                </div>
+                <div id="form-right" class="formdiv">
+                    <label for="company">Company</label>
+                    <input id="company" name="company" type="text">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" type="text"></textarea>
+                    <input id="submit" type="submit" value="Save contact">
+                </div>
+            </form>
+        </div>
+    </div>       
+    
+    <div id="edit-contact-div" class="button-div"><button id="edit-contact" class="wide-button">&#9654; Edit contact</button></div>
     <!--    end form part-->
     <hr>
     <!----  List of contacts, each contact should at least have names, email and phone number
             luxury items: picture, any number of phone numbers, -->
     <div id="contact-list">
+        <table id="contact-table">
+            <thead>
+                <tr>
+                    <th>&nbsp;&nbsp;&nbsp;</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Placeholder1</th>
+                    <th>Placeholder2</th>
+                    <th>Placeholder3</th>
+                    <th>Placeholder4</th>
+                    <th>Placeholder5</th>
+                </tr>
+            </thead>
 
+        </table>
     </div>
-
-
-
-
 
     <!---   end list -->
     <!----  footer? Credit to me? -->
