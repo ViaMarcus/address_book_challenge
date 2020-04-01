@@ -42,7 +42,28 @@
         </div>
     </div>       
     
-    <div id="edit-contact-div" class="button-div"><button id="edit-contact" class="wide-button">&#9654; Edit contact</button></div>
+    <div id="edit-contact-div" class="button-div"><button id="edit-contact" class="wide-button">&#9654; Edit contact</button>
+        <form id="edit-contact-form">
+            <div id="form-left" class="formdiv">
+                <input id="id" name="id" style="display: none;">
+                <label for="name">Name</label>
+                <input id="editName" name="name" type="text">
+                <label for="email">Email</label>
+                <input id="editEmail" name="email" type="email">
+            </div>
+            <div id="form-middle" class="formdiv">
+                <label for="phone">Phone</label>
+                <input id="editPhone" name="phone" type="text">
+                <label for="editCompany">Company</label>
+                <input id="editCompany" name="company" type="text">
+            </div>
+            <div id="form-right" class="formdiv">
+                <label for="editNotes">Notes</label>
+                <textarea id="editNotes" name="notes" type="text"></textarea>
+                <input id="editSubmit" type="submit" value="Save changes">
+            </div>
+        </form>
+    </div>
     <!--    end form part-->
     <hr>
     <!----  List of contacts, each contact should at least have names, email and phone number

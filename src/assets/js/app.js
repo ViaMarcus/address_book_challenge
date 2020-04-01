@@ -1,4 +1,5 @@
 const  storage = window.localStorage
+let setOfClickedBoxes = new Set();
 
 const  renderContacts = () => { //draws contact list
 	const  contacts = JSON.parse(storage.getItem('contacts'));
@@ -10,7 +11,7 @@ const  renderContacts = () => { //draws contact list
 		try { //remove old contacts or "no contacts..." on redraw with contacts
 			document.getElementById('tbod').remove()
 		} catch(error) {}
-		
+		contacts.sort((a,b) => a.name.localeCompare(b.name));
 		contacts.forEach(contact  => {
 			tbody.innerHTML += `<tr>
 				<td><input type="checkbox" id="${contact.id}.box" class="contact-box"></td>
@@ -28,9 +29,8 @@ const  renderContacts = () => { //draws contact list
 		tbody.innerHTML = '<tr id="tbod"><td align="center" colspan="9" > You have no contacts in your address book </td></tr>'
 		table.appendChild(tbody)
 	}
+	onRef();
 }
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
 	renderContacts()
@@ -38,40 +38,32 @@ document.addEventListener('DOMContentLoaded', () => {
 	const  newContactButton = document.getElementById('add-contact');
 	const newContactDiv = document.getElementById('new-contact-div');
 	const editContactButton = document.getElementById('edit-contact');
-	var editing = '&#9654; ';
-	var contactEditId = -1;
+	const editForm = document.getElementById('edit-contact-form');
+	const editContactDiv = document.getElementById('edit-contact-div');
+
 	contactForm.style.display = 'none';
+	editForm.style.display = 'none';
 
-	newContactButton.addEventListener('click', () => { //This function allows toogle of contact form visibility
-		if (contactForm.style.display === '') {
-			contactForm.style.display = 'none';
-			newContactButton.innerHTML= '&#9654; New contact'
-			newContactDiv.style.marginTop = 0;
-			
-		} else {
-			contactForm.style.display = '';
-			newContactButton.innerHTML = '&#9660; New contact'
-			newContactDiv.style.marginTop = '0.5rem';
-		}
-	})
 
-	var setOfClickedBoxes = new Set();
-	document.querySelectorAll('.contact-box').forEach(box => { //Gathers all the selected checkboxes in setOfClickedBoxes and changes edit button to reflect last click
-		box.addEventListener('change', event => {
-			if (box.checked) {
-				setOfClickedBoxes.add(parseInt(box.id));
-				console.log(setOfClickedBoxes)
-				contactEditId = parseInt(box.id);
-				editContactButton.innerHTML = `${editing}Edit ${JSON.parse(storage.getItem('contacts'))[parseInt(box.id)].name}`
-				editContactButton.style.color = 'black';
-			} else {
-				setOfClickedBoxes.delete(parseInt(box.id));
-				console.log(setOfClickedBoxes);
-				contactEditId = -1;
-				editContactButton.style.color = 'grey';
-				editContactButton.innerHTML = `${editing}Edit contact`;
-			}
-		})
+	editForm.addEventListener('submit', event => { //updates contact when editform is submitted.
+		event.preventDefault()
+		let contacts = JSON.parse(storage.getItem('contacts'));
+		const { id, editName, editEmail, editPhone, editCompany, editNotes } = editForm.elements
+		contact = contacts.find(x => x.id == id.value);
+		console.log(contact)
+			contact.name = editName.value;
+			contact.email = editEmail.value;
+			contact.phone = editPhone.value;
+			contact.company = editCompany.value;
+			contact.notes = editNotes.value;
+		console.log(contact)
+		storage.setItem('contacts', JSON.stringify(contacts));
+		setOfClickedBoxes.clear();
+		editForm.reset();
+		editForm.style.display = 'none';
+		editContactButton.style.color = "grey";
+		editContactButton.innerHTML = '&#9654; Edit contact'
+		renderContacts();
 	})
 
 	contactForm.addEventListener('submit', event  => { //This function handles form submit and then forces rerender
@@ -96,5 +88,64 @@ document.addEventListener('DOMContentLoaded', () => {
 		storage.setItem('contacts', JSON.stringify(contacts))
 		renderContacts()
 		contactForm.reset()
-   })
+	})
+
+	newContactButton.addEventListener('click', () => { //This function allows toogle of contact form visibility
+		if (contactForm.style.display === '') {
+			contactForm.style.display = 'none';
+			newContactButton.innerHTML= '&#9654; New contact'
+			newContactDiv.style.marginTop = 0;
+			
+		} else {
+			contactForm.style.display = '';
+			newContactButton.innerHTML = '&#9660; New contact'
+			newContactDiv.style.marginTop = '0.5rem';
+		}
+	})
+	
+	editContactButton.addEventListener('click', () => { //This function allows toogle of edit form visibility
+		if (editForm.style.display === '' || setOfClickedBoxes.size == 0) {
+			editForm.style.display = 'none';
+			editContactButton.innerHTML= `&#9654;${editContactButton.innerHTML.substring(1)}`
+			
+		} else {
+			editForm.style.display = '';
+			editContactButton.innerHTML = `&#9660;${editContactButton.innerHTML.substring(1)}`
+		}
+	})
 })
+function onRef() { //activates once rerender is done
+	const editContactButton = document.getElementById('edit-contact');
+	const editForm = document.getElementById('edit-contact-form');
+
+	document.querySelectorAll('.contact-box').forEach(box => { //Gathers all the selected checkboxes in setOfClickedBoxes and changes edit button to reflect last click
+		box.addEventListener('change', event => {
+			event.preventDefault();
+			if (box.checked) { //add to set of clicked boxes, and sets contact up for editing
+				let contacts = JSON.parse(storage.getItem('contacts'));
+				let checkedId = parseInt(box.id)
+				console.log(box.id)
+				setOfClickedBoxes.add(checkedId);
+				
+				contact = contacts.find(x => x.id == checkedId);
+				console.log("added " + contact.name);
+				editContactButton.innerHTML = `${editContactButton.innerHTML.substring(0,1)} Edit ${contact.name}`
+				editContactButton.style.color = 'black';
+					document.getElementById('id').value = contact.id;
+					document.getElementById('editName').value = contact.name;
+					document.getElementById('editPhone').value = contact.phone;
+					document.getElementById('editEmail').value = contact.email;
+					document.getElementById('editCompany').value = contact.company;
+					document.getElementById('editNotes').value = contact.notes;
+				console.log(setOfClickedBoxes)
+			} else {//removes from set of clicked boxes, and disables editing form
+				setOfClickedBoxes.delete(parseInt(box.id));
+				editContactButton.style.color = 'grey';
+				editContactButton.innerHTML = `&#9654; Edit contact`;
+				console.log(setOfClickedBoxes)
+				editForm.style.display = 'none';
+				
+			}
+		})
+	})
+}

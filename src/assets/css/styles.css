@@ -1,19 +1,18 @@
 body {
-    background-color: bisque;
+    background-color: orange;
 }
 .button-div { /*New and edit contact divs  */
     width: 100%;
     box-shadow: 0px 2px 2px grey;
+    background-color: bisque;
 }
 .button-div button {
     font-size: 200%;
 }
-#ne-button-div {
-    justify-content: space-evenly;
-}
+
 
 #contact-table, td, th{
-    border: 4px brown double;
+    border: 2px brown solid;
     border-collapse: collapse;
 }
 #contact-table {
@@ -31,6 +30,9 @@ body {
 #edit-contact {
     width: 100%;
     color: grey;
+}
+#edit-contact-div {
+    margin-top: 0.5rem;
 }
 .formdiv {
     position: relative;
@@ -50,3 +52,17 @@ label {
     width: 100%;
     margin-top: 8px;
 }
+tbody tr:nth-child(2n+1) {
+    background-color: white;
+}
+tbody tr:hover {
+    background-color: lightblue;
+}
+thead tr {
+    background-color: orange;
+    text-align: left;
+}
+thead tr th {
+    padding-left: 6px;
+}
+
