@@ -1,10 +1,10 @@
 body {
-    background-color: orange;
+    background-color: darkslategray;
 }
 .button-div { /*New and edit contact divs  */
     width: 100%;
     box-shadow: 0px 2px 2px grey;
-    background-color: bisque;
+    background-color: lightblue;
 }
 .button-div button {
     font-size: 200%;
@@ -19,20 +19,31 @@ body {
     width: 100%;
 }
 
-#add-contact, #edit-contact{
-    width: 100%;
+#add-contact, #edit-contact, #delete-contact{
     text-align: left;
     background: none;
     height: 100%;
     border: none;
     outline: 0;
+    display: block;
+}
+#add-contact {
+    width: 100%;
+}
+#buttons {
+    display: flex;
+}
+#delete-contact {
+    width: 25%;
+    background-color: pink;
 }
 #edit-contact {
-    width: 100%;
+    width: 75%;
     color: grey;
 }
 #edit-contact-div {
     margin-top: 0.5rem;
+    width: 100%;
 }
 .formdiv {
     position: relative;
@@ -55,11 +66,14 @@ label {
 tbody tr:nth-child(2n+1) {
     background-color: white;
 }
+tbody tr:nth-child(2n+2) {
+    background-color: rgb(203, 179, 220);
+}
 tbody tr:hover {
     background-color: lightblue;
 }
 thead tr {
-    background-color: orange;
+    background-color: rgb(166, 142, 194);
     text-align: left;
 }
 thead tr th {

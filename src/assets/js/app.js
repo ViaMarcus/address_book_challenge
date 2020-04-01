@@ -40,10 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
 	const editContactButton = document.getElementById('edit-contact');
 	const editForm = document.getElementById('edit-contact-form');
 	const editContactDiv = document.getElementById('edit-contact-div');
+	const deleteButton = document.getElementById('delete-contact');
 
 	contactForm.style.display = 'none';
 	editForm.style.display = 'none';
 
+	deleteButton.addEventListener('click', event => {
+		event.preventDefault();
+		let contacts = JSON.parse(storage.getItem('contacts'))
+		let newContacts = [];
+		contacts.forEach(contact => {
+			if (!setOfClickedBoxes.has(contact.id)){
+				newContacts.push(contact);
+			}
+		})
+		storage.setItem('contacts', JSON.stringify(newContacts));
+		renderContacts();
+	})
 
 	editForm.addEventListener('submit', event => { //updates contact when editform is submitted.
 		event.preventDefault()
@@ -117,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function onRef() { //activates once rerender is done
 	const editContactButton = document.getElementById('edit-contact');
 	const editForm = document.getElementById('edit-contact-form');
+	const deleteButton = document.getElementById('delete-contact');
 
 	document.querySelectorAll('.contact-box').forEach(box => { //Gathers all the selected checkboxes in setOfClickedBoxes and changes edit button to reflect last click
 		box.addEventListener('change', event => {
@@ -138,13 +152,19 @@ function onRef() { //activates once rerender is done
 					document.getElementById('editCompany').value = contact.company;
 					document.getElementById('editNotes').value = contact.notes;
 				console.log(setOfClickedBoxes)
+				deleteButton.innerHTML = `&#10060; Delete ${setOfClickedBoxes.size}`;
+				deleteButton.style.color = "black";
 			} else {//removes from set of clicked boxes, and disables editing form
 				setOfClickedBoxes.delete(parseInt(box.id));
 				editContactButton.style.color = 'grey';
 				editContactButton.innerHTML = `&#9654; Edit contact`;
 				console.log(setOfClickedBoxes)
 				editForm.style.display = 'none';
-				
+				deleteButton.innerHTML = `&#10060; Delete ${setOfClickedBoxes.size}`;
+				if (setOfClickedBoxes.size == 0) {
+					deleteButton.innerHTML = `&#10060; Delete`;
+					deleteButton.style.color = 'grey';
+				}
 			}
 		})
 	})
