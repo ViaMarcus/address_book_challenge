@@ -1,22 +1,19 @@
 const  storage = window.localStorage
 
-const  renderContacts = () => {
+const  renderContacts = () => { //draws contact list
 	const  contacts = JSON.parse(storage.getItem('contacts'));
 
 	let  table = document.querySelector('#contact-table');
 	const  tbody = document.createElement('tbody');
 	tbody.setAttribute("id","tbod")
-	if (contacts) {
-		try {
-			document.getElementById('no-contacts').remove()
-		} catch(error) {}
-		try {
+	if (contacts) { 
+		try { //remove old contacts or "no contacts..." on redraw with contacts
 			document.getElementById('tbod').remove()
 		} catch(error) {}
 		
 		contacts.forEach(contact  => {
 			tbody.innerHTML += `<tr>
-				<td><input type="checkbox" id="${contact.id}.box"></td>
+				<td><input type="checkbox" id="${contact.id}.box" class="contact-box"></td>
 				<td>${contact.name}</td>
 				<td>${contact.email}</td>
 				<td>${contact.phone}</td>
@@ -28,38 +25,60 @@ const  renderContacts = () => {
 	  })
 	  table.appendChild(tbody);
 	} else {
-		tbody.innerHTML = '<tr id="no-contacts"><td align="center" colspan="9" > You have no contacts in your address book </td></tr>'
+		tbody.innerHTML = '<tr id="tbod"><td align="center" colspan="9" > You have no contacts in your address book </td></tr>'
 		table.appendChild(tbody)
 	}
 }
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
 	renderContacts()
 	const  contactForm = document.getElementById('new-contact-form');
 	const  newContactButton = document.getElementById('add-contact');
+	const newContactDiv = document.getElementById('new-contact-div');
+	const editContactButton = document.getElementById('edit-contact');
+	var editing = '&#9654; ';
+	var contactEditId = -1;
 	contactForm.style.display = 'none';
 
-	newContactButton.addEventListener('click', () => {
+	newContactButton.addEventListener('click', () => { //This function allows toogle of contact form visibility
 		if (contactForm.style.display === '') {
 			contactForm.style.display = 'none';
-			newContactButton.innerHTML= '&#9654; New'
+			newContactButton.innerHTML= '&#9654; New contact'
+			newContactDiv.style.marginTop = 0;
+			
 		} else {
 			contactForm.style.display = '';
-			newContactButton.innerHTML = '&#9660; New'
+			newContactButton.innerHTML = '&#9660; New contact'
+			newContactDiv.style.marginTop = '0.5rem';
 		}
 	})
 
+	var setOfClickedBoxes = new Set();
+	document.querySelectorAll('.contact-box').forEach(box => { //Gathers all the selected checkboxes in setOfClickedBoxes and changes edit button to reflect last click
+		box.addEventListener('change', event => {
+			if (box.checked) {
+				setOfClickedBoxes.add(parseInt(box.id));
+				console.log(setOfClickedBoxes)
+				contactEditId = parseInt(box.id);
+				editContactButton.innerHTML = `${editing}Edit ${JSON.parse(storage.getItem('contacts'))[parseInt(box.id)].name}`
+				editContactButton.style.color = 'black';
+			} else {
+				setOfClickedBoxes.delete(parseInt(box.id));
+				console.log(setOfClickedBoxes);
+				contactEditId = -1;
+				editContactButton.style.color = 'grey';
+				editContactButton.innerHTML = `${editing}Edit contact`;
+			}
+		})
+	})
 
-	contactForm.addEventListener('submit', event  => {
+	contactForm.addEventListener('submit', event  => { //This function handles form submit and then forces rerender
 		event.preventDefault()
 
 		let contacts = JSON.parse(storage.getItem('contacts')) || [] 
 		let nextId = contacts.length != 0 ? contacts[contacts.length-1].id+1 : 0;
-/*		if (contacts.length != 0) {
-			nextId = contacts[contacts.length-1].id+1
-		} else {
-			nextId = 0;
-		} */
 		const { name, email, phone, company, notes } = contactForm.elements
 		const  contact = {
 			id: nextId,

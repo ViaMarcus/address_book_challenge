@@ -1,14 +1,17 @@
 body {
     background-color: bisque;
 }
-.button-div {
+.button-div { /*New and edit contact divs  */
     width: 100%;
     box-shadow: 0px 2px 2px grey;
 }
-#new-contact-div {
-    margin-top: 1rem;
+.button-div button {
+    font-size: 200%;
+}
+#ne-button-div {
     justify-content: space-evenly;
 }
+
 #contact-table, td, th{
     border: 4px brown double;
     border-collapse: collapse;
@@ -27,7 +30,23 @@ body {
 }
 #edit-contact {
     width: 100%;
+    color: grey;
 }
 .formdiv {
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 6px;
+}
+.formdiv input, textarea {
+    display: grid;
+}
+label {
     display: inline;
+}
+#submit {
+    width: 100%;
+    margin-top: 8px;
 }
