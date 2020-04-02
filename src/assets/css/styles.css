@@ -23,6 +23,7 @@ body {
     border: none;
     outline: 0;
     display: block;
+    font-family: monospace;
 }
 #add-contact {
     width: 100%;
