@@ -1,23 +1,20 @@
 body {
     background-color: darkslategray;
+    font-family: monospace;
+    padding: 0;
+    margin: 0;
 }
 .button-div { /*New and edit contact divs  */
-    width: 100%;
-    box-shadow: 0px 2px 2px grey;
+    width: calc(100%-8px);
+    box-shadow: 1px 2px 2px grey;
     background-color: lightblue;
+    margin: 4px;
 }
 .button-div button {
     font-size: 200%;
 }
 
 
-#contact-table, td, th{
-    border: 2px brown solid;
-    border-collapse: collapse;
-}
-#contact-table {
-    width: 100%;
-}
 
 #add-contact, #edit-contact, #delete-contact{
     text-align: left;
@@ -30,12 +27,53 @@ body {
 #add-contact {
     width: 100%;
 }
+header {
+    height: fit-content;
+    background-color: turquoise;
+    font-size: 120%;
+    display: block;
+    margin: 0px;
+    width: 100%;
+    display: inline-block;
+    overflow: hidden;
+}
+#title-div {
+    width: 74%;
+    vertical-align: middle;
+    height: fit-content;
+    min-height: 2rem;
+    left: 0;
+    display: inline-block;
+}
+#select-div {
+    max-width: 25%;
+    min-width: fit-content;
+    padding-top: 2px;
+    padding-left: 2px;
+    font-weight: bold;
+    display: inline-block;
+    justify-content: end;
+    margin-bottom: 2px;
+}
+header select {
+    border: 2px black solid;
+    background: none;
+    font-size: 80%;
+    margin-top: 3px;
+}
+
+h3 {
+    padding-left: 1rem;
+    word-wrap: break-word;
+    margin: 3px;
+}
 #buttons {
     display: flex;
 }
 #delete-contact {
     width: 25%;
-    background-color: pink;
+    background-color: lightgrey;
+    color: rgb(245, 159, 149);
 }
 #edit-contact {
     width: 75%;
@@ -43,7 +81,7 @@ body {
 }
 #edit-contact-div {
     margin-top: 0.5rem;
-    width: 100%;
+    width: calc(100%-8px);
 }
 .formdiv {
     position: relative;
@@ -63,6 +101,19 @@ label {
     width: 100%;
     margin-top: 8px;
 }
+/* Table and table elements*/
+#contact-table, td, th{
+    border: 2px turquoise solid;
+    border-collapse: collapse;
+}
+#contact-table {
+    margin: 4px;
+    display: block;
+}
+#contact-div {
+    width: calc(100%-8px);
+    padding: 1rem;
+}
 tbody tr:nth-child(2n+1) {
     background-color: white;
 }
@@ -78,5 +129,9 @@ thead tr {
 }
 thead tr th {
     padding-left: 6px;
+    padding-right: 6px;
+}
+.notes {
+    width: 100%;
 }
 

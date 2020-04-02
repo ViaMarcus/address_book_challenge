@@ -8,8 +8,18 @@
 </head>
 <body>
     <!----  header with our info and select user/address book -->
-
-
+    <header>
+        <div id="title-div">
+        <h3>The really awesome address book that doesn't store addresses</h3></div>
+        <div id="select-div">
+            <label for="book-selector">Choose book:</label>
+            <select id="book-selector">
+                <option value="personal">Personal</option>
+                <option value="work">Work</option>
+            </select>
+        </div>
+    </header>
+    
 
 
 
@@ -45,7 +55,7 @@
     <div id="edit-contact-div" class="button-div">
         <div id="buttons">
             <button id="edit-contact" class="wide-button">&#9654; Edit contact</button>
-            <button id="delete-contact">&#10060; Delete</button>
+            <button id="delete-contact">Delete</button>
         </div>
         <form id="edit-contact-form">
             <div id="form-left" class="formdiv">
@@ -64,12 +74,12 @@
             <div id="form-right" class="formdiv">
                 <label for="editNotes">Notes</label>
                 <textarea id="editNotes" name="notes" type="text"></textarea>
-                <input id="editSubmit" type="submit" value="Save changes">
+                <input id="submit" type="submit" value="Save changes">
             </div>
         </form>
     </div>
+
     <!--    end form part-->
-    <hr>
     <!----  List of contacts, each contact should at least have names, email and phone number
             luxury items: picture, any number of phone numbers, -->
     <div id="contact-list">
@@ -81,10 +91,7 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Company</th>
-                    <th>Placeholder2</th>
-                    <th>Placeholder3</th>
-                    <th>Placeholder4</th>
-                    <th>Placeholder5</th>
+                    <th class="notes">Notes</th>
                 </tr>
             </thead>
 

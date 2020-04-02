@@ -1,38 +1,64 @@
 const  storage = window.localStorage
 let setOfClickedBoxes = new Set();
+let book;
 
 const  renderContacts = () => { //draws contact list
-	const  contacts = JSON.parse(storage.getItem('contacts'));
+	const  contacts = JSON.parse(storage.getItem(book));
 
 	let  table = document.querySelector('#contact-table');
 	const  tbody = document.createElement('tbody');
 	tbody.setAttribute("id","tbod")
-	if (contacts) { 
+	if (contacts && contacts.length != 0) { 
 		try { //remove old contacts or "no contacts..." on redraw with contacts
-			document.getElementById('tbod').remove()
+			document.getElementById("tbod").remove();
 		} catch(error) {}
 		contacts.sort((a,b) => a.name.localeCompare(b.name));
 		contacts.forEach(contact  => {
 			tbody.innerHTML += `<tr>
 				<td><input type="checkbox" id="${contact.id}.box" class="contact-box"></td>
 				<td>${contact.name}</td>
-				<td>${contact.email}</td>
-				<td>${contact.phone}</td>
+				<td><a href="mailto:${contact.email}">${contact.email}</a></td>
+				<td><a href="callto:${contact.phone}">${contact.phone}</a></td>
 				<td>${contact.company}</td>
-				<td>${contact.notes}</td>
-				<td>${""}</td>
-				<td>${""}</td>
-				<td>${""}</td></tr>`;
+				<td class="notes">${contact.notes}</td></tr>`;
 	  })
 	  table.appendChild(tbody);
 	} else {
-		tbody.innerHTML = '<tr id="tbod"><td align="center" colspan="9" > You have no contacts in your address book </td></tr>'
+		try { //remove old contacts or "no contacts..." on redraw with contacts
+			document.getElementById("tbod").remove();
+		} catch(error) {}
+		tbody.innerHTML = '<tr><td align="center" colspan="9" > You have no contacts in your address book </td></tr>'
 		table.appendChild(tbody)
 	}
 	onRef();
 }
 
+const redrawDeleteButton = () => {
+	const deleteButton = document.getElementById('delete-contact');
+	if (setOfClickedBoxes.size==0) {
+		deleteButton.innerHTML = `Delete`;
+		deleteButton.style.color = "rgb(245, 159, 149)";
+		deleteButton.style.backgroundColor = 'lightgrey';
+	} else {
+		deleteButton.innerHTML = `Delete ${setOfClickedBoxes.size}`;
+		deleteButton.style.color = "red";
+		deleteButton.style.backgroundColor = "pink";
+	}
+}
+const redrawEditButton = () => {
+	const editForm = document.getElementById('edit-contact-form');
+	const editContactButton = document.getElementById('edit-contact');
+	if (editForm.style.display === '' || setOfClickedBoxes.size == 0) {
+		editForm.style.display = 'none';
+		editContactButton.style.color = "grey";
+		editContactButton.innerHTML= `&#9654;${editContactButton.innerHTML.substring(1)}`
+	} else {
+		editForm.style.display = '';
+		editContactButton.innerHTML = `&#9660;${editContactButton.innerHTML.substring(1)}`
+	}
+}
 document.addEventListener('DOMContentLoaded', () => {
+	book = document.getElementById('book-selector').value;
 	renderContacts()
 	const  contactForm = document.getElementById('new-contact-form');
 	const  newContactButton = document.getElementById('add-contact');
@@ -41,65 +67,82 @@ document.addEventListener('DOMContentLoaded', () => {
 	const editForm = document.getElementById('edit-contact-form');
 	const editContactDiv = document.getElementById('edit-contact-div');
 	const deleteButton = document.getElementById('delete-contact');
+	const bookSelector = document.getElementById('book-selector');
 
 	contactForm.style.display = 'none';
 	editForm.style.display = 'none';
 
-	deleteButton.addEventListener('click', event => {
-		event.preventDefault();
-		let contacts = JSON.parse(storage.getItem('contacts'))
-		let newContacts = [];
-		contacts.forEach(contact => {
-			if (!setOfClickedBoxes.has(contact.id)){
-				newContacts.push(contact);
-			}
-		})
-		storage.setItem('contacts', JSON.stringify(newContacts));
+	bookSelector.addEventListener('change', event => { //rerenders contacts based on selected address book
+		book=bookSelector.value;
+		setOfClickedBoxes.clear();
 		renderContacts();
+		redrawDeleteButton();
+		editContactButton.innerHTML = "&#9654; Edit contact"
+		redrawEditButton();
+	})
+
+	deleteButton.addEventListener('click', event => { //remove all selected contacts from the contacts list
+		event.preventDefault();
+		if (setOfClickedBoxes.size != 0 && window.confirm(`Are you sure you want to delete ${setOfClickedBoxes.size} contact(s)`)){
+			let contacts = JSON.parse(storage.getItem(book))
+			let newContacts = [];
+			contacts.forEach(contact => {
+				if (!setOfClickedBoxes.has(contact.id)){
+					newContacts.push(contact);
+				}
+			})
+			storage.setItem(book, JSON.stringify(newContacts));
+			setOfClickedBoxes.clear();
+			renderContacts();
+			redrawDeleteButton();
+			editContactButton.innerHTML = '&#9654; Edit contact';
+			redrawEditButton();
+		}
 	})
 
 	editForm.addEventListener('submit', event => { //updates contact when editform is submitted.
 		event.preventDefault()
-		let contacts = JSON.parse(storage.getItem('contacts'));
+		let contacts = JSON.parse(storage.getItem(book));
 		const { id, editName, editEmail, editPhone, editCompany, editNotes } = editForm.elements
 		contact = contacts.find(x => x.id == id.value);
 		console.log(contact)
-			contact.name = editName.value;
+			contact.name = editName.value.replace(/[\{\}\[\]\>\<\\\<\>]/g,"");
 			contact.email = editEmail.value;
-			contact.phone = editPhone.value;
-			contact.company = editCompany.value;
-			contact.notes = editNotes.value;
+			contact.phone = editPhone.value.replace(/[^0-9\-\+\s]/g,"");
+			contact.company = editCompany.value.replace(/[\{\}\[\]\>\<\\\<\>]/g,"");
+			contact.notes = editNotes.value.replace(/[\{\}\[\]\>\<\\\<\>]/g,"");
 		console.log(contact)
-		storage.setItem('contacts', JSON.stringify(contacts));
+		storage.setItem(book, JSON.stringify(contacts));
 		setOfClickedBoxes.clear();
 		editForm.reset();
-		editForm.style.display = 'none';
-		editContactButton.style.color = "grey";
 		editContactButton.innerHTML = '&#9654; Edit contact'
 		renderContacts();
+		redrawDeleteButton();
+		redrawEditButton();
 	})
 
 	contactForm.addEventListener('submit', event  => { //This function handles form submit and then forces rerender
 		event.preventDefault()
 
-		let contacts = JSON.parse(storage.getItem('contacts')) || [] 
+		let contacts = JSON.parse(storage.getItem(book)) || [] 
 		let nextId = contacts.length != 0 ? contacts[contacts.length-1].id+1 : 0;
 		const { name, email, phone, company, notes } = contactForm.elements
 		const  contact = {
 			id: nextId,
-			name:  name.value,
+			name:  name.value.replace(/[\{\}\[\]\>\<\\\<\>]/g,""),
 			email:  email.value,
-			phone:  phone.value,
-			company:  company.value,
-			notes:  notes.value,
+			phone:  phone.value.replace(/[^0-9\-\+\s]/g,""),
+			company:  company.value.replace(/[\{\}\[\]\>\<\\\<\>]/g,""),
+			notes:  notes.value.replace(/[\{\}\[\]\>\<\\\<\>]/g,""),
 		}
 
 		console.log(contact)
 
 		contacts.push(contact)
 
-		storage.setItem('contacts', JSON.stringify(contacts))
+		storage.setItem(book, JSON.stringify(contacts))
 		renderContacts()
+		redrawDeleteButton();
 		contactForm.reset()
 	})
 
@@ -117,17 +160,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	})
 	
 	editContactButton.addEventListener('click', () => { //This function allows toogle of edit form visibility
-		if (editForm.style.display === '' || setOfClickedBoxes.size == 0) {
-			editForm.style.display = 'none';
-			editContactButton.innerHTML= `&#9654;${editContactButton.innerHTML.substring(1)}`
-			
-		} else {
-			editForm.style.display = '';
-			editContactButton.innerHTML = `&#9660;${editContactButton.innerHTML.substring(1)}`
-		}
+		redrawEditButton();
 	})
+
+
 })
-function onRef() { //activates once rerender is done
+function onRef() { //readds listeners to drawn checkboxes and defines deletebutton redraw once rerender is done, 
 	const editContactButton = document.getElementById('edit-contact');
 	const editForm = document.getElementById('edit-contact-form');
 	const deleteButton = document.getElementById('delete-contact');
@@ -136,7 +174,7 @@ function onRef() { //activates once rerender is done
 		box.addEventListener('change', event => {
 			event.preventDefault();
 			if (box.checked) { //add to set of clicked boxes, and sets contact up for editing
-				let contacts = JSON.parse(storage.getItem('contacts'));
+				let contacts = JSON.parse(storage.getItem(book));
 				let checkedId = parseInt(box.id)
 				console.log(box.id)
 				setOfClickedBoxes.add(checkedId);
@@ -152,20 +190,17 @@ function onRef() { //activates once rerender is done
 					document.getElementById('editCompany').value = contact.company;
 					document.getElementById('editNotes').value = contact.notes;
 				console.log(setOfClickedBoxes)
-				deleteButton.innerHTML = `&#10060; Delete ${setOfClickedBoxes.size}`;
-				deleteButton.style.color = "black";
+				redrawDeleteButton();
 			} else {//removes from set of clicked boxes, and disables editing form
 				setOfClickedBoxes.delete(parseInt(box.id));
 				editContactButton.style.color = 'grey';
 				editContactButton.innerHTML = `&#9654; Edit contact`;
 				console.log(setOfClickedBoxes)
 				editForm.style.display = 'none';
-				deleteButton.innerHTML = `&#10060; Delete ${setOfClickedBoxes.size}`;
-				if (setOfClickedBoxes.size == 0) {
-					deleteButton.innerHTML = `&#10060; Delete`;
-					deleteButton.style.color = 'grey';
-				}
+				redrawDeleteButton();
 			}
 		})
 	})
+
+
 }
